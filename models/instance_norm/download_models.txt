@@ -1,0 +1,6 @@
+http://cs.stanford.edu/people/jcjohns/fast-neural-style/models/instance_norm/candy.t7
+http://cs.stanford.edu/people/jcjohns/fast-neural-style/models/instance_norm/la_muse.t7
+http://cs.stanford.edu/people/jcjohns/fast-neural-style/models/instance_norm/mosaic.t7
+http://cs.stanford.edu/people/jcjohns/fast-neural-style/models/instance_norm/feathers.t7
+http://cs.stanford.edu/people/jcjohns/fast-neural-style/models/instance_norm/the_scream.t7
+http://cs.stanford.edu/people/jcjohns/fast-neural-style/models/instance_norm/udnie.t7

@@ -1,0 +1,4 @@
+http://cs.stanford.edu/people/jcjohns/fast-neural-style/models/eccv16/the_wave.t7
+http://cs.stanford.edu/people/jcjohns/fast-neural-style/models/eccv16/starry_night.t7
+http://cs.stanford.edu/people/jcjohns/fast-neural-style/models/eccv16/la_muse.t7
+http://cs.stanford.edu/people/jcjohns/fast-neural-style/models/eccv16/composition_vii.t7
