@@ -1,10 +1,10 @@
 from ikomia import utils, core, dataprocess
-import NeuralStyleTransfer_process as processMod
+from ikomia.utils import qtconversion
+from NeuralStyleTransfer.NeuralStyleTransfer_process import NeuralStyleTransferProcessParam
 import os
 import cv2
 from imutils import paths
-
-#PyQt GUI framework
+# PyQt GUI framework
 from PyQt5.QtWidgets import *
 
 
@@ -37,17 +37,18 @@ backend_targets = {
     cv2.dnn.DNN_BACKEND_CUDA: [cv2.dnn.DNN_TARGET_CUDA, cv2.dnn.DNN_TARGET_CUDA_FP16],
 }
 
-#--------------------
-#- Class which implements widget associated with the process
-#- Inherits core.CProtocolTaskWidget from Imageez API
-#--------------------
-class NeuralStyleTransferWidget(core.CProtocolTaskWidget):
+
+# --------------------
+# - Class which implements widget associated with the process
+# - Inherits core.CProtocolTaskWidget from Imageez API
+# --------------------
+class NeuralStyleTransferWidget(core.CWorkflowTaskWidget):
 
     def __init__(self, param, parent):
-        core.CProtocolTaskWidget.__init__(self, parent)
+        core.CWorkflowTaskWidget.__init__(self, parent)
 
         if param is None:
-            self.parameters = processMod.NeuralStyleTransferProcessParam()
+            self.parameters = NeuralStyleTransferProcessParam()
         else:
             self.parameters = param
 
@@ -91,7 +92,7 @@ class NeuralStyleTransferWidget(core.CProtocolTaskWidget):
         self.grid_layout.addWidget(self.combo_model, 2, 1, 1, 1)
 
         # PyQt -> Qt wrapping
-        layout_ptr = utils.PyQtToQt(self.grid_layout)
+        layout_ptr = qtconversion.PyQtToQt(self.grid_layout)
 
         # Set widget layout
         self.setLayout(layout_ptr)
@@ -140,10 +141,10 @@ class NeuralStyleTransferWidget(core.CProtocolTaskWidget):
         self.emitApply(self.parameters)
 
 
-#--------------------
-#- Factory class to build process widget object
-#- Inherits dataprocess.CWidgetFactory from Imageez API
-#--------------------
+# --------------------
+# - Factory class to build process widget object
+# - Inherits dataprocess.CWidgetFactory from Imageez API
+# --------------------
 class NeuralStyleTransferWidgetFactory(dataprocess.CWidgetFactory):
 
     def __init__(self):

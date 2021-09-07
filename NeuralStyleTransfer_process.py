@@ -4,14 +4,14 @@ import copy
 import cv2
 
 
-#--------------------
-#- Class to handle the process parameters
-#- Inherits core.CProtocolTaskParam from Ikomia API
-#--------------------
-class NeuralStyleTransferProcessParam(core.CProtocolTaskParam):
+# --------------------
+# - Class to handle the process parameters
+# - Inherits core.CProtocolTaskParam from Ikomia API
+# --------------------
+class NeuralStyleTransferProcessParam(core.CWorkflowTaskParam):
 
     def __init__(self):
-        core.CProtocolTaskParam.__init__(self)
+        core.CWorkflowTaskParam.__init__(self)
         # Place default value initialization here
         self.model_path = ""
         self.image_path = ""
@@ -34,17 +34,17 @@ class NeuralStyleTransferProcessParam(core.CProtocolTaskParam):
         return paramMap
 
 
-#--------------------
-#- Class which implements the process
-#- Inherits core.CProtocolTask or derived from Ikomia API
-#--------------------
-class NeuralStyleTransferProcess(dataprocess.CImageProcess2d):
+# --------------------
+# - Class which implements the process
+# - Inherits core.CProtocolTask or derived from Ikomia API
+# --------------------
+class NeuralStyleTransferProcess(dataprocess.C2dImageTask):
 
     def __init__(self, name, param):
-        dataprocess.CImageProcess2d.__init__(self, name)
+        dataprocess.C2dImageTask.__init__(self, name)
         self.net = None
         # Add input_img/output of the process here
-        self.addOutput(dataprocess.CImageProcessIO())
+        self.addOutput(dataprocess.CImageIO())
 
         # Create parameters class
         if param is None:
@@ -58,7 +58,7 @@ class NeuralStyleTransferProcess(dataprocess.CImageProcess2d):
         return 1
 
     def globalInputChanged(self, new_sequence):
-        if new_sequence == True:
+        if new_sequence:
             param = self.getParam()
             param.update = True
 
@@ -126,14 +126,14 @@ class NeuralStyleTransferProcess(dataprocess.CImageProcess2d):
         self.endTaskRun()
 
 
-#--------------------
-#- Factory class to build process object
-#- Inherits dataprocess.CProcessFactory from Ikomia API
-#--------------------
-class NeuralStyleTransferProcessFactory(dataprocess.CProcessFactory):
+# --------------------
+# - Factory class to build process object
+# - Inherits dataprocess.CProcessFactory from Ikomia API
+# --------------------
+class NeuralStyleTransferProcessFactory(dataprocess.CTaskFactory):
 
     def __init__(self):
-        dataprocess.CProcessFactory.__init__(self)
+        dataprocess.CTaskFactory.__init__(self)
         # Set process information as string here
         self.info.name = "NeuralStyleTransfer"
         self.info.shortDescription = "Neural network method to paint given image in the style of the reference image."
@@ -157,5 +157,5 @@ class NeuralStyleTransferProcessFactory(dataprocess.CProcessFactory):
         self.info.keywords = "art,painting,deep learning"
 
     def create(self, param=None):
-        #Create process object 
+        # Create process object
         return NeuralStyleTransferProcess(self.info.name, param)
