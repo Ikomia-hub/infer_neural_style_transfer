@@ -1,6 +1,6 @@
 from ikomia import utils, core, dataprocess
 from ikomia.utils import qtconversion
-from NeuralStyleTransfer.NeuralStyleTransfer_process import NeuralStyleTransferProcessParam
+from infer_neural_style_transfer.infer_neural_style_transfer_process import NeuralStyleTransferParam
 import os
 import cv2
 from imutils import paths
@@ -48,7 +48,7 @@ class NeuralStyleTransferWidget(core.CWorkflowTaskWidget):
         core.CWorkflowTaskWidget.__init__(self, parent)
 
         if param is None:
-            self.parameters = NeuralStyleTransferProcessParam()
+            self.parameters = NeuralStyleTransferParam()
         else:
             self.parameters = param
 
@@ -150,7 +150,7 @@ class NeuralStyleTransferWidgetFactory(dataprocess.CWidgetFactory):
     def __init__(self):
         dataprocess.CWidgetFactory.__init__(self)
         # Set the name of the process -> it must be the same as the one declared in the process factory class
-        self.name = "NeuralStyleTransfer"
+        self.name = "infer_neural_style_transfer"
 
     def create(self, param):
         # Create widget object

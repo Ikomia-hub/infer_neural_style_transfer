@@ -8,7 +8,7 @@ import cv2
 # - Class to handle the process parameters
 # - Inherits core.CProtocolTaskParam from Ikomia API
 # --------------------
-class NeuralStyleTransferProcessParam(core.CWorkflowTaskParam):
+class NeuralStyleTransferParam(core.CWorkflowTaskParam):
 
     def __init__(self):
         core.CWorkflowTaskParam.__init__(self)
@@ -38,7 +38,7 @@ class NeuralStyleTransferProcessParam(core.CWorkflowTaskParam):
 # - Class which implements the process
 # - Inherits core.CProtocolTask or derived from Ikomia API
 # --------------------
-class NeuralStyleTransferProcess(dataprocess.C2dImageTask):
+class NeuralStyleTransfer(dataprocess.C2dImageTask):
 
     def __init__(self, name, param):
         dataprocess.C2dImageTask.__init__(self, name)
@@ -48,7 +48,7 @@ class NeuralStyleTransferProcess(dataprocess.C2dImageTask):
 
         # Create parameters class
         if param is None:
-            self.setParam(NeuralStyleTransferProcessParam())
+            self.setParam(NeuralStyleTransferParam())
         else:
             self.setParam(copy.deepcopy(param))
 
@@ -130,12 +130,12 @@ class NeuralStyleTransferProcess(dataprocess.C2dImageTask):
 # - Factory class to build process object
 # - Inherits dataprocess.CProcessFactory from Ikomia API
 # --------------------
-class NeuralStyleTransferProcessFactory(dataprocess.CTaskFactory):
+class NeuralStyleTransferFactory(dataprocess.CTaskFactory):
 
     def __init__(self):
         dataprocess.CTaskFactory.__init__(self)
         # Set process information as string here
-        self.info.name = "NeuralStyleTransfer"
+        self.info.name = "infer_neural_style_transfer"
         self.info.shortDescription = "Neural network method to paint given image in the style of the reference image."
         self.info.description = "Neural style transfer is an optimization technique used to take two images—a content image " \
                                 "and a style reference image (such as an artwork by a famous painter)—and blend them together so the output image looks like the content image, " \
@@ -158,4 +158,4 @@ class NeuralStyleTransferProcessFactory(dataprocess.CTaskFactory):
 
     def create(self, param=None):
         # Create process object
-        return NeuralStyleTransferProcess(self.info.name, param)
+        return NeuralStyleTransfer(self.info.name, param)
