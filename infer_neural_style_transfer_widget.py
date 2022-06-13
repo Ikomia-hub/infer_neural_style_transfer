@@ -6,7 +6,7 @@ import cv2
 from imutils import paths
 # PyQt GUI framework
 from PyQt5.QtWidgets import *
-
+from infer_neural_style_transfer.utils import model_zoo
 
 backend_names = {
     cv2.dnn.DNN_BACKEND_DEFAULT: "Default",
@@ -60,7 +60,7 @@ class NeuralStyleTransferWidget(core.CWorkflowTaskWidget):
         # Combobox for inference backend
         label_backend = QLabel("DNN backend")
         self.combo_backend = QComboBox()
-        self.fill_combo_backend() 
+        self.fill_combo_backend()
         self.combo_backend.setCurrentIndex(self.combo_backend.findData(self.parameters.backend))
         self.combo_backend.currentIndexChanged.connect(self.on_backend_changed)
 
@@ -74,22 +74,24 @@ class NeuralStyleTransferWidget(core.CWorkflowTaskWidget):
         # Combobox for models
         label_model = QLabel("Select your model")
         self.combo_model = QComboBox()
-        self.fill_combo_model()
-        self.combo_model.currentIndexChanged.connect(self.on_param_changed)
-        
-        try:
-            current_index = self.model_paths.index(self.parameters.model_path)
-            self.combo_model.setCurrentIndex(current_index)
-        except:
-            self.combo_model.setCurrentIndex(0)            
-        
+
+        # Combobox for method
+        label_method = QLabel("Select your method")
+        self.combo_method = QComboBox()
+        self.fill_combo_method()
+        self.combo_method.currentTextChanged.connect(self.on_method_changed)
+        self.combo_method.setCurrentText(self.parameters.method)
+        self.on_method_changed(1)
+
         # Fill layout
         self.grid_layout.addWidget(label_backend, 0, 0, 1, 1)
         self.grid_layout.addWidget(self.combo_backend, 0, 1, 1, 1)
         self.grid_layout.addWidget(label_target, 1, 0, 1, 1)
         self.grid_layout.addWidget(self.combo_target, 1, 1, 1, 1)
-        self.grid_layout.addWidget(label_model, 2, 0, 1, 1)
-        self.grid_layout.addWidget(self.combo_model, 2, 1, 1, 1)
+        self.grid_layout.addWidget(label_method, 2, 0, 1, 1)
+        self.grid_layout.addWidget(self.combo_method, 2, 1, 1, 1)
+        self.grid_layout.addWidget(label_model, 3, 0, 1, 1)
+        self.grid_layout.addWidget(self.combo_model, 3, 1, 1, 1)
 
         # PyQt -> Qt wrapping
         layout_ptr = qtconversion.PyQtToQt(self.grid_layout)
@@ -98,7 +100,7 @@ class NeuralStyleTransferWidget(core.CWorkflowTaskWidget):
         self.setLayout(layout_ptr)
 
     def fill_combo_backend(self):
-        for backend in backend_names:            
+        for backend in backend_names:
             self.combo_backend.addItem(backend_names[backend], backend)
 
     def fill_combo_target(self, backend):
@@ -108,18 +110,9 @@ class NeuralStyleTransferWidget(core.CWorkflowTaskWidget):
         for target in targets:
             self.combo_target.addItem(target_names[target], target)
 
-    def fill_combo_model(self):
-        # Grab the paths to all neural style transfer models in our 'models'
-        # directory, provided all models end with the '.t7' file extension
-        model_path = os.path.dirname(os.path.realpath(__file__))+"/models"
-        self.image_path = os.path.dirname(os.path.realpath(__file__))+"/images/"
-        self.model_paths = paths.list_files(model_path, validExts=(".t7",))
-        self.model_paths = sorted(list(self.model_paths))
-
-        for i in range(len(self.model_paths)):
-            tmp = os.path.basename(self.model_paths[i])
-            model_path = os.path.splitext(tmp)[0]
-            self.combo_model.addItem(model_path)
+    def fill_combo_method(self):
+        for method in ["eccv16", "instance_norm"]:
+            self.combo_method.addItem(method)
 
     def on_backend_changed(self, index):
         backend = self.combo_backend.currentData()
@@ -129,14 +122,24 @@ class NeuralStyleTransferWidget(core.CWorkflowTaskWidget):
     def on_param_changed(self, index):
         self.param_changed = True
 
+    def on_method_changed(self, index):
+        available_models = [k for k, v in model_zoo[self.combo_method.currentText()].items()]
+        self.combo_model.clear()
+        for model in available_models:
+            self.combo_model.addItem(model)
+        if self.parameters.model in available_models:
+            self.combo_model.setCurrentText(self.parameters.model)
+        else:
+            self.combo_model.setCurrentText(available_models[0])
+
     def onApply(self):
         # Apply button has been pressed
         # Get parameters from widget
-        self.parameters.update = self.param_changed
+        self.parameters.update = True
         self.parameters.backend = self.combo_backend.currentData()
         self.parameters.target = self.combo_target.currentData()
-        self.parameters.model_path = self.model_paths[self.combo_model.currentIndex()]
-        self.parameters.image_path = self.image_path + self.combo_model.currentText() + ".jpg"
+        self.parameters.method = self.combo_method.currentText()
+        self.parameters.model = self.combo_model.currentText()
         # Send signal to launch the process
         self.emitApply(self.parameters)
 
