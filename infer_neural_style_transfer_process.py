@@ -16,8 +16,6 @@ class NeuralStyleTransferParam(core.CWorkflowTaskParam):
     def __init__(self):
         core.CWorkflowTaskParam.__init__(self)
         # Place default value initialization here
-        self.model_path = ""
-        self.image_path = ""
         self.update = False
         self.backend = cv2.dnn.DNN_BACKEND_DEFAULT
         self.target = cv2.dnn.DNN_TARGET_CPU
@@ -27,8 +25,6 @@ class NeuralStyleTransferParam(core.CWorkflowTaskParam):
     def setParamMap(self, paramMap):
         # Set parameters values from Ikomia application
         # Parameters values are stored as string and accessible like a python dict
-        self.model_path = str(paramMap["model_path"])
-        self.image_path = str(paramMap["image_path"])
         self.method = str(paramMap["method"])
         self.model = str(paramMap["model"])
         self.update = strtobool(paramMap["update"])
@@ -37,8 +33,6 @@ class NeuralStyleTransferParam(core.CWorkflowTaskParam):
         # Send parameters values to Ikomia application
         # Create the specific dict structure (string container)
         paramMap = core.ParamMap()
-        paramMap["model_path"] = str(self.model_path)
-        paramMap["image_path"] = str(self.image_path)
         paramMap["method"] = str(self.method)
         paramMap["model"] = str(self.model)
         paramMap["update"] = str(self.update)
