@@ -101,14 +101,14 @@ class NeuralStyleTransfer(dataprocess.C2dImageTask):
 
         # Load the input_img image, resize it to have a width of 600 pixels, and
         # then grab the image dimensions
-        src_image = input_img.getImage()
-        (h_src, w_src) = src_image.shape[:2]
-        src_image = imutils.resize(src_image, width=600)
-        (h, w) = src_image.shape[:2]
+        src_image = input_img.getImage()   
+        (h_src, w_src) = src_image.shape[:2]   
+        src_img_resize = imutils.resize(src_image, width=600)
+        (h, w) = src_img_resize.shape[:2]
 
         # Construct a blob from the image, set the input_img, and then perform a
         # forward pass of the network
-        blob = cv2.dnn.blobFromImage(src_image, 1.0, (w, h), (103.939, 116.779, 123.680), swapRB=False, crop=False)
+        blob = cv2.dnn.blobFromImage(src_img_resize, 1.0, (w, h), (103.939, 116.779, 123.680), swapRB=False, crop=False)
         self.net.setInput(blob)
         dst_image = self.net.forward()
 
