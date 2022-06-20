@@ -48,4 +48,5 @@ model_zoo = {
 def download_model(method, name, models_folder):
     URL = model_zoo[method][name]["model"]
     response = requests.get(URL)
-    open(os.path.join(models_folder, method, name+".t7"), "wb").write(response.content)
+    with open(os.path.join(models_folder, method, name+".t7"), "wb") as f:
+        f.write(response.content)

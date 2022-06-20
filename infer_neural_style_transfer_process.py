@@ -25,6 +25,8 @@ class NeuralStyleTransferParam(core.CWorkflowTaskParam):
     def setParamMap(self, paramMap):
         # Set parameters values from Ikomia application
         # Parameters values are stored as string and accessible like a python dict
+        self.backend = int(paramMap["backend"])
+        self.target = int(paramMap["target"])
         self.method = str(paramMap["method"])
         self.model = str(paramMap["model"])
         self.update = strtobool(paramMap["update"])
@@ -36,6 +38,8 @@ class NeuralStyleTransferParam(core.CWorkflowTaskParam):
         paramMap["method"] = str(self.method)
         paramMap["model"] = str(self.model)
         paramMap["update"] = str(self.update)
+        paramMap["backend"] = str(self.backend)
+        paramMap["target"] = str(self.target)
         return paramMap
 
 
@@ -77,7 +81,7 @@ class NeuralStyleTransfer(dataprocess.C2dImageTask):
 
         # Get output (image)
         output_img = self.getOutput(0)
-        output_model_img= self.getOutput(1)
+        output_model_img = self.getOutput(1)
 
         # Get parameters
         param = self.getParam()
@@ -87,7 +91,7 @@ class NeuralStyleTransfer(dataprocess.C2dImageTask):
 
         # Load the neural style transfer model from disk
         if self.net is None or param.update:
-            model_path = os.path.join(plugin_folder, "models", param.method, param.model+".t7")
+            model_path = os.path.join(plugin_folder, "models", param.method, param.model + ".t7")
             if not os.path.isfile(model_path):
                 print("Downloading model...")
                 download_model(param.method, param.model, os.path.join(plugin_folder, "models"))
@@ -155,7 +159,7 @@ class NeuralStyleTransferFactory(dataprocess.CTaskFactory):
                                 "but 'painted' in the style of the style reference image. " \
                                 "This is implemented by optimizing the output image to match the content statistics of the content image " \
                                 "and the style statistics of the style reference image. These statistics are extracted from the images using a convolutional network. " \
-                                "Implementation : Adrian Rosebrock." 
+                                "Implementation : Adrian Rosebrock."
         # relative path -> as displayed in Ikomia application process tree
         self.info.path = "Plugins/Python/Art"
         self.info.version = "1.0.1"
