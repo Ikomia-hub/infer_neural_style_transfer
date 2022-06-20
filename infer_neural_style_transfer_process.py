@@ -81,7 +81,7 @@ class NeuralStyleTransfer(dataprocess.C2dImageTask):
 
         # Get output (image)
         output_img = self.getOutput(0)
-        output_model_img= self.getOutput(1)
+        output_model_img = self.getOutput(1)
 
         # Get parameters
         param = self.getParam()
@@ -91,7 +91,7 @@ class NeuralStyleTransfer(dataprocess.C2dImageTask):
 
         # Load the neural style transfer model from disk
         if self.net is None or param.update:
-            model_path = os.path.join(plugin_folder, "models", param.method, param.model+".t7")
+            model_path = os.path.join(plugin_folder, "models", param.method, param.model + ".t7")
             if not os.path.isfile(model_path):
                 print("Downloading model...")
                 download_model(param.method, param.model, os.path.join(plugin_folder, "models"))
@@ -102,8 +102,8 @@ class NeuralStyleTransfer(dataprocess.C2dImageTask):
 
         # Load the input_img image, resize it to have a width of 600 pixels, and
         # then grab the image dimensions
-        src_image = input_img.getImage()   
-        (h_src, w_src) = src_image.shape[:2]   
+        src_image = input_img.getImage()
+        (h_src, w_src) = src_image.shape[:2]
         src_image = imutils.resize(src_image, width=600)
         (h, w) = src_image.shape[:2]
 
@@ -159,7 +159,7 @@ class NeuralStyleTransferFactory(dataprocess.CTaskFactory):
                                 "but 'painted' in the style of the style reference image. " \
                                 "This is implemented by optimizing the output image to match the content statistics of the content image " \
                                 "and the style statistics of the style reference image. These statistics are extracted from the images using a convolutional network. " \
-                                "Implementation : Adrian Rosebrock." 
+                                "Implementation : Adrian Rosebrock."
         # relative path -> as displayed in Ikomia application process tree
         self.info.path = "Plugins/Python/Art"
         self.info.version = "1.0.1"
