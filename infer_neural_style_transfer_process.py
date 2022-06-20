@@ -29,7 +29,7 @@ class NeuralStyleTransferParam(core.CWorkflowTaskParam):
         self.target = int(paramMap["target"])
         self.method = str(paramMap["method"])
         self.model = str(paramMap["model"])
-        self.update = strtobool(paramMap["update"])
+        self.update = True
 
     def getParamMap(self):
         # Send parameters values to Ikomia application
@@ -37,7 +37,6 @@ class NeuralStyleTransferParam(core.CWorkflowTaskParam):
         paramMap = core.ParamMap()
         paramMap["method"] = str(self.method)
         paramMap["model"] = str(self.model)
-        paramMap["update"] = str(self.update)
         paramMap["backend"] = str(self.backend)
         paramMap["target"] = str(self.target)
         return paramMap
