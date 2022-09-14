@@ -4,7 +4,6 @@ import copy
 import cv2
 import os
 from infer_neural_style_transfer.utils import model_zoo, download_model
-from distutils.util import strtobool
 
 
 # --------------------
