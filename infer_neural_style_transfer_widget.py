@@ -97,7 +97,7 @@ class NeuralStyleTransferWidget(core.CWorkflowTaskWidget):
         layout_ptr = qtconversion.PyQtToQt(self.grid_layout)
 
         # Set widget layout
-        self.setLayout(layout_ptr)
+        self.set_layout(layout_ptr)
 
     def fill_combo_backend(self):
         for backend in backend_names:
@@ -132,7 +132,7 @@ class NeuralStyleTransferWidget(core.CWorkflowTaskWidget):
         else:
             self.combo_model.setCurrentText(available_models[0])
 
-    def onApply(self):
+    def on_apply(self):
         # Apply button has been pressed
         # Get parameters from widget
         self.parameters.update = True
@@ -141,7 +141,7 @@ class NeuralStyleTransferWidget(core.CWorkflowTaskWidget):
         self.parameters.method = self.combo_method.currentText()
         self.parameters.model = self.combo_model.currentText()
         # Send signal to launch the process
-        self.emitApply(self.parameters)
+        self.emit_apply(self.parameters)
 
 
 # --------------------

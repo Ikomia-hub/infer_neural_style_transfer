@@ -21,7 +21,7 @@ class NeuralStyleTransferParam(core.CWorkflowTaskParam):
         self.method = "instance_norm"
         self.model = "candy"
 
-    def setParamMap(self, paramMap):
+    def set_values(self, paramMap):
         # Set parameters values from Ikomia application
         # Parameters values are stored as string and accessible like a python dict
         self.backend = int(paramMap["backend"])
@@ -30,10 +30,10 @@ class NeuralStyleTransferParam(core.CWorkflowTaskParam):
         self.model = str(paramMap["model"])
         self.update = True
 
-    def getParamMap(self):
+    def get_values(self):
         # Send parameters values to Ikomia application
         # Create the specific dict structure (string container)
-        paramMap = core.ParamMap()
+        paramMap = {}
         paramMap["method"] = str(self.method)
         paramMap["model"] = str(self.model)
         paramMap["backend"] = str(self.backend)
@@ -51,38 +51,38 @@ class NeuralStyleTransfer(dataprocess.C2dImageTask):
         dataprocess.C2dImageTask.__init__(self, name)
         self.net = None
         # Add input_img/output of the process here
-        self.addOutput(dataprocess.CImageIO())
+        self.add_output(dataprocess.CImageIO())
 
         # Create parameters class
         if param is None:
-            self.setParam(NeuralStyleTransferParam())
+            self.set_param_object(NeuralStyleTransferParam())
         else:
-            self.setParam(copy.deepcopy(param))
+            self.set_param_object(copy.deepcopy(param))
 
-    def getProgressSteps(self):
+    def get_progress_steps(self):
         # Function returning the number of progress steps for this process
         # This is handled by the main progress bar of Ikomia application
         return 1
 
     def globalInputChanged(self, new_sequence):
         if new_sequence:
-            param = self.getParam()
+            param = self.get_param_object()
             param.update = True
 
     def run(self):
         # Core function of your process
-        # Call beginTaskRun for initialization
-        self.beginTaskRun()
+        # Call begin_task_run for initialization
+        self.begin_task_run()
 
         # Get input (image):
-        input_img = self.getInput(0)
+        input_img = self.get_input(0)
 
         # Get output (image)
-        output_img = self.getOutput(0)
-        output_model_img = self.getOutput(1)
+        output_img = self.get_output(0)
+        output_model_img = self.get_output(1)
 
         # Get parameters
-        param = self.getParam()
+        param = self.get_param_object()
 
         # Get plugin folder
         plugin_folder = os.path.dirname(os.path.abspath(__file__))
@@ -100,7 +100,7 @@ class NeuralStyleTransfer(dataprocess.C2dImageTask):
 
         # Load the input_img image, resize it to have a width of 600 pixels, and
         # then grab the image dimensions
-        src_image = input_img.getImage()   
+        src_image = input_img.get_image()   
         (h_src, w_src) = src_image.shape[:2]   
         src_img_resize = imutils.resize(src_image, width=600)
         (h, w) = src_img_resize.shape[:2]
@@ -123,22 +123,22 @@ class NeuralStyleTransfer(dataprocess.C2dImageTask):
         # Our image is RGB so we must swap the result and resize it to the original size
         dst_image = cv2.cvtColor(dst_image, cv2.COLOR_RGB2BGR)
         dst_image = cv2.resize(dst_image, (w_src, h_src))
-        output_img.setImage(dst_image)
+        output_img.set_image(dst_image)
 
         # set output image as current image model
         image_path = os.path.join(plugin_folder, "images", model_zoo[param.method][param.model]["img"])
         image_model = cv2.imread(image_path)
         if image_model is not None:
             image_model = cv2.cvtColor(image_model, cv2.COLOR_RGB2BGR)
-            output_model_img.setImage(image_model)
+            output_model_img.set_image(image_model)
         else:
             print("Error loading model image.")
 
         # Step progress bar:
-        self.emitStepProgress()
+        self.emit_step_progress()
 
-        # Call endTaskRun to finalize process
-        self.endTaskRun()
+        # Call end_task_run to finalize process
+        self.end_task_run()
 
 
 # --------------------
@@ -151,7 +151,7 @@ class NeuralStyleTransferFactory(dataprocess.CTaskFactory):
         dataprocess.CTaskFactory.__init__(self)
         # Set process information as string here
         self.info.name = "infer_neural_style_transfer"
-        self.info.shortDescription = "Neural network method to paint given image in the style of the reference image."
+        self.info.short_description = "Neural network method to paint given image in the style of the reference image."
         self.info.description = "Neural style transfer is an optimization technique used to take two images—a content image " \
                                 "and a style reference image (such as an artwork by a famous painter)—and blend them together so the output image looks like the content image, " \
                                 "but 'painted' in the style of the style reference image. " \
@@ -160,14 +160,14 @@ class NeuralStyleTransferFactory(dataprocess.CTaskFactory):
                                 "Implementation : Adrian Rosebrock."
         # relative path -> as displayed in Ikomia application process tree
         self.info.path = "Plugins/Python/Art"
-        self.info.version = "1.0.2"
-        self.info.iconPath = "icon/icon.png"
+        self.info.version = "1.1.0"
+        self.info.icon_path = "icon/icon.png"
         self.info.authors = "Justin Johnson, Alexandre Alahi, Li Fei-Fei"
         self.info.article = "Perceptual Losses for Real-Time Style Transfer and Super-Resolution."
         self.info.journal = "ECCV"
         self.info.year = 2016
         self.info.license = "Free for personal or research use only"
-        self.info.documentationLink = "https://www.pyimagesearch.com/2018/08/27/neural-style-transfer-with-opencv/"
+        self.info.documentation_link = "https://www.pyimagesearch.com/2018/08/27/neural-style-transfer-with-opencv/"
         self.info.repository = "https://github.com/jcjohnson/fast-neural-style"
         self.info.keywords = "art,painting,deep learning"
 

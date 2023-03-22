@@ -11,8 +11,8 @@ def test(t, data_dict):
     logger.info("===== Test::infer neural style transfer =====")
     logger.info("----- Use default parameters")
     img = cv2.imread(data_dict["images"]["detection"]["coco"])
-    input_img_0 = t.getInput(0)
-    input_img_0.setImage(img)
+    input_img_0 = t.get_input(0)
+    input_img_0.set_image(img)
     for method, models in model_zoo.items():
         for model_name, _ in models.items():
             params = task.get_parameters(t)
