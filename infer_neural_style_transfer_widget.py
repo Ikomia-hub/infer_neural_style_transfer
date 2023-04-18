@@ -127,8 +127,8 @@ class NeuralStyleTransferWidget(core.CWorkflowTaskWidget):
         self.combo_model.clear()
         for model in available_models:
             self.combo_model.addItem(model)
-        if self.parameters.model in available_models:
-            self.combo_model.setCurrentText(self.parameters.model)
+        if self.parameters.model_name_or_path in available_models:
+            self.combo_model.setCurrentText(self.parameters.model_name_or_path)
         else:
             self.combo_model.setCurrentText(available_models[0])
 
@@ -139,7 +139,7 @@ class NeuralStyleTransferWidget(core.CWorkflowTaskWidget):
         self.parameters.backend = self.combo_backend.currentData()
         self.parameters.target = self.combo_target.currentData()
         self.parameters.method = self.combo_method.currentText()
-        self.parameters.model = self.combo_model.currentText()
+        self.parameters.model_name_or_path = self.combo_model.currentText()
         # Send signal to launch the process
         self.emit_apply(self.parameters)
 

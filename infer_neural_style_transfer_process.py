@@ -19,7 +19,7 @@ class NeuralStyleTransferParam(core.CWorkflowTaskParam):
         self.backend = cv2.dnn.DNN_BACKEND_DEFAULT
         self.target = cv2.dnn.DNN_TARGET_CPU
         self.method = "instance_norm"
-        self.model = "candy"
+        self.model_name_or_path = "candy"
 
     def set_values(self, paramMap):
         # Set parameters values from Ikomia application
@@ -27,7 +27,7 @@ class NeuralStyleTransferParam(core.CWorkflowTaskParam):
         self.backend = int(paramMap["backend"])
         self.target = int(paramMap["target"])
         self.method = str(paramMap["method"])
-        self.model = str(paramMap["model"])
+        self.model_name_or_path = str(paramMap["model_name_or_path"])
         self.update = True
 
     def get_values(self):
@@ -35,7 +35,7 @@ class NeuralStyleTransferParam(core.CWorkflowTaskParam):
         # Create the specific dict structure (string container)
         paramMap = {}
         paramMap["method"] = str(self.method)
-        paramMap["model"] = str(self.model)
+        paramMap["model_name_or_path"] = str(self.model_name_or_path)
         paramMap["backend"] = str(self.backend)
         paramMap["target"] = str(self.target)
         return paramMap
@@ -89,10 +89,10 @@ class NeuralStyleTransfer(dataprocess.C2dImageTask):
 
         # Load the neural style transfer model from disk
         if self.net is None or param.update:
-            model_path = os.path.join(plugin_folder, "models", param.method, param.model + ".t7")
+            model_path = os.path.join(plugin_folder, "models", param.method, param.model_name_or_path + ".t7")
             if not os.path.isfile(model_path):
                 print("Downloading model...")
-                download_model(param.method, param.model, os.path.join(plugin_folder, "models"))
+                download_model(param.method, param.model_name_or_path, os.path.join(plugin_folder, "models"))
             self.net = cv2.dnn.readNetFromTorch(model_path)
             self.net.setPreferableBackend(param.backend)
             self.net.setPreferableTarget(param.target)
@@ -126,7 +126,7 @@ class NeuralStyleTransfer(dataprocess.C2dImageTask):
         output_img.set_image(dst_image)
 
         # set output image as current image model
-        image_path = os.path.join(plugin_folder, "images", model_zoo[param.method][param.model]["img"])
+        image_path = os.path.join(plugin_folder, "images", model_zoo[param.method][param.model_name_or_path]["img"])
         image_model = cv2.imread(image_path)
         if image_model is not None:
             image_model = cv2.cvtColor(image_model, cv2.COLOR_RGB2BGR)
