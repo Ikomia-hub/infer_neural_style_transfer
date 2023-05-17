@@ -3,6 +3,7 @@ import imutils
 import copy
 import cv2
 import os
+import numpy as np
 from infer_neural_style_transfer.utils import model_zoo, download_model
 
 
@@ -117,8 +118,15 @@ class NeuralStyleTransfer(dataprocess.C2dImageTask):
         dst_image[0] += 103.939
         dst_image[1] += 116.779
         dst_image[2] += 123.680
-        dst_image /= 255.0
         dst_image = dst_image.transpose(1, 2, 0)
+
+        # Conversion float to uint8
+        max_value = np.max(dst_image, axis=(0, 1))
+        max_value= np.where(max_value > 255, max_value, 255)
+        min_value = np.min(dst_image, axis=(0, 1))
+        min_value = np.where(0 > min_value, min_value, 0)
+        dst_image = (dst_image - min_value) / (max_value - min_value) * 255
+        dst_image = dst_image.astype(dtype='uint8')
 
         # Our image is RGB so we must swap the result and resize it to the original size
         dst_image = cv2.cvtColor(dst_image, cv2.COLOR_RGB2BGR)
