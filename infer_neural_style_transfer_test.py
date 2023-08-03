@@ -15,8 +15,8 @@ def test(t, data_dict):
     input_img_0.set_image(img)
     for method, models in model_zoo.items():
         for model_name, _ in models.items():
-            params = task.get_parameters(t)
+            params = t.get_param_object()
             params["model_name"] = model_name
             params["method"] = method
-            task.set_parameters(t, params)
+            t.set_parameters(params)
     return run_for_test(t)
