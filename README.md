@@ -19,10 +19,9 @@
     </a> 
 </p>
 
-Neural style transfer is an optimization technique used to take two images—a content image and a style reference image (such as an artwork by a famous painter)—and blend them together so the output image looks like the content image, but 'painted' in the style of the style reference image. This is implemented by optimizing the output image to match the content statistics of the content image and the style statistics of the style reference image. These statistics are extracted from the images using a convolutional network. Implementation : Adrian Rosebrock.
+Run Neural Style Transfer algorithm.
 
-[Insert illustrative image here. Image must be accessible publicly, in algorithm Github repository for example.
-<img src="images/illustration.png"  alt="Illustrative image" width="30%" height="30%">]
+![Results](https://raw.githubusercontent.com/Ikomia-hub/infer_neural_style_transfer/feat/new_readme/icon/results.png)
 
 ## :rocket: Use with Ikomia API
 
@@ -39,8 +38,8 @@ pip install ikomia
 [Change the sample image URL to fit algorithm purpose]
 
 ```python
-import ikomia
 from ikomia.dataprocess.workflow import Workflow
+from ikomia.utils.displayIO import display
 
 # Init your workflow
 wf = Workflow()
@@ -49,7 +48,13 @@ wf = Workflow()
 algo = wf.add_task(name="infer_neural_style_transfer", auto_connect=True)
 
 # Run on your image  
-wf.run_on(url="example_image.png")
+wf.run_on(url="https://cdn.pixabay.com/photo/2017/07/11/14/22/pont-du-gard-2493762_960_720.jpg")
+
+# Display transferred style
+display(algo.get_output(1))
+
+# Display result
+display(algo.get_output(0))
 ```
 
 ## :sunny: Use with Ikomia Studio
@@ -62,13 +67,30 @@ Ikomia Studio offers a friendly UI with the same features as the API.
 
 ## :pencil: Set algorithm parameters
 
-[Explain each algorithm parameters]
+- **method** (str, default="instance_norm"): method used to train the model. Must be "eccv16" or "instance_norm".
+- **model_name** (str, default="candy"): pre-trained model name.  
+Model names available per method:
+- eccv16
+  - the_wave
+  - la_muse
+  - composition_vii
+  - starry_night
+- instance_norm
+  - candy
+  - mosaic
+  - the_scream
+  - udnie
+  - feathers
+  - la_muse
+- **backend** (str, default="Default"): backend.
+- **target** (str, default="CPU"): target.
 
-[Change the sample image URL to fit algorithm purpose]
+***Note***: parameter key and value should be in **string format** when added to the dictionary.
+
 
 ```python
-import ikomia
 from ikomia.dataprocess.workflow import Workflow
+from ikomia.utils.displayIO import display
 
 # Init your workflow
 wf = Workflow()
@@ -77,13 +99,18 @@ wf = Workflow()
 algo = wf.add_task(name="infer_neural_style_transfer", auto_connect=True)
 
 algo.set_parameters({
-    "param1": "value1",
-    "param2": "value2",
-    ...
+    "method": "eccv16",
+    "model_name": "la_muse"
 })
 
 # Run on your image  
-wf.run_on(url="example_image.png")
+wf.run_on(url="https://cdn.pixabay.com/photo/2017/07/11/14/22/pont-du-gard-2493762_960_720.jpg")
+
+# Display transferred style
+display(algo.get_output(1))
+
+# Display result
+display(algo.get_output(0))
 
 ```
 
