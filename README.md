@@ -21,7 +21,7 @@
 
 Run Neural Style Transfer algorithm.
 
-![Results](https://raw.githubusercontent.com/Ikomia-hub/infer_neural_style_transfer/feat/new_readme/icon/results.png)
+![Results](https://raw.githubusercontent.com/Ikomia-hub/infer_neural_style_transfer/main/icon/results.png)
 
 ## :rocket: Use with Ikomia API
 
