@@ -173,6 +173,8 @@ class NeuralStyleTransferFactory(dataprocess.CTaskFactory):
         self.info.repository = "https://github.com/Ikomia-hub/infer_neural_style_transfer"
         self.info.original_repository = "https://github.com/jcjohnson/fast-neural-style"
         self.info.keywords = "art,painting,deep learning"
+        self.info.algo_type = core.AlgoType.INFER
+        self.info.algo_tasks = "IMAGE_GENERATION"
 
     def create(self, param=None):
         # Create process object
