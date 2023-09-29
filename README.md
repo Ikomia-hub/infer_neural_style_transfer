@@ -138,7 +138,3 @@ for output in algo.get_outputs()
     # Export it to JSON
     output.to_json()
 ```
-
-## :fast_forward: Advanced usage 
-
-[optional]
