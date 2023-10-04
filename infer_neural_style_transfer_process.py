@@ -65,11 +65,6 @@ class NeuralStyleTransfer(dataprocess.C2dImageTask):
         # This is handled by the main progress bar of Ikomia application
         return 1
 
-    def global_input_changed(self, new_sequence):
-        if new_sequence:
-            param = self.get_param_object()
-            param.update = True
-
     def run(self):
         # Core function of your process
         # Call begin_task_run for initialization
@@ -97,7 +92,8 @@ class NeuralStyleTransfer(dataprocess.C2dImageTask):
             self.net = cv2.dnn.readNetFromTorch(model_path)
             self.net.setPreferableBackend(param.backend)
             self.net.setPreferableTarget(param.target)
-            param.update = False
+            # temporary fix for a bug in net.forward when model is not reloaded
+            #param.update = False
 
         # Load the input_img image, resize it to have a width of 600 pixels, and
         # then grab the image dimensions
