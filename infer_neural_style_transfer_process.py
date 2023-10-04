@@ -65,7 +65,7 @@ class NeuralStyleTransfer(dataprocess.C2dImageTask):
         # This is handled by the main progress bar of Ikomia application
         return 1
 
-    def globalInputChanged(self, new_sequence):
+    def global_input_changed(self, new_sequence):
         if new_sequence:
             param = self.get_param_object()
             param.update = True
@@ -162,7 +162,7 @@ class NeuralStyleTransferFactory(dataprocess.CTaskFactory):
         self.info.short_description = "Neural network method to paint given image in the style of the reference image."
         # relative path -> as displayed in Ikomia application process tree
         self.info.path = "Plugins/Python/Art"
-        self.info.version = "1.1.1"
+        self.info.version = "1.1.2"
         self.info.icon_path = "icon/icon.png"
         self.info.authors = "Justin Johnson, Alexandre Alahi, Li Fei-Fei"
         self.info.article = "Perceptual Losses for Real-Time Style Transfer and Super-Resolution."
