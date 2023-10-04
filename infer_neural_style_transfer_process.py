@@ -158,7 +158,7 @@ class NeuralStyleTransferFactory(dataprocess.CTaskFactory):
         self.info.short_description = "Neural network method to paint given image in the style of the reference image."
         # relative path -> as displayed in Ikomia application process tree
         self.info.path = "Plugins/Python/Art"
-        self.info.version = "1.1.2"
+        self.info.version = "1.1.3"
         self.info.icon_path = "icon/icon.png"
         self.info.authors = "Justin Johnson, Alexandre Alahi, Li Fei-Fei"
         self.info.article = "Perceptual Losses for Real-Time Style Transfer and Super-Resolution."
