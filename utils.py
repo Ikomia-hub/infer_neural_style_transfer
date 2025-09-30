@@ -1,6 +1,7 @@
 import requests
 import os
 
+
 model_zoo = {
     "eccv16": {
         "the_wave": {
@@ -46,13 +47,12 @@ model_zoo = {
 
 
 def download_model(method, name, models_folder):
-    URL = model_zoo[method][name]["model"]
+    model_url = model_zoo[method][name]["model"]
 
-# Download the dataset
+    # Download the model
     model_folder = os.path.join(models_folder, method)
-    print(URL)
-    response = requests.get(URL, stream=True)
+    response = requests.get(model_url, stream=True)
+
     with open(os.path.join(model_folder, f"{name}.t7"), "wb") as file:
         for chunk in response.iter_content(chunk_size=8192):
             file.write(chunk)
-
