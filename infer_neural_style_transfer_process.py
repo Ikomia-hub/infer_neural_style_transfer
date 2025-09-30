@@ -185,6 +185,10 @@ class NeuralStyleTransferFactory(dataprocess.CTaskFactory):
         self.info.keywords = "art,painting,deep learning"
         self.info.algo_type = core.AlgoType.INFER
         self.info.algo_tasks = "IMAGE_GENERATION"
+        self.info.hardware_config.min_cpu = 4
+        self.info.hardware_config.min_ram = 8
+        self.info.hardware_config.gpu_required = False
+        self.info.hardware_config.min_vram = 4
 
     def create(self, param=None):
         # Create process object
