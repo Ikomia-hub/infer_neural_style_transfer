@@ -22,24 +22,25 @@ class NeuralStyleTransferParam(core.CWorkflowTaskParam):
         self.method = "instance_norm"
         self.model_name = "candy"
 
-    def set_values(self, paramMap):
+    def set_values(self, param_map):
         # Set parameters values from Ikomia application
         # Parameters values are stored as string and accessible like a python dict
-        self.backend = int(paramMap["backend"])
-        self.target = int(paramMap["target"])
-        self.method = str(paramMap["method"])
-        self.model_name = str(paramMap["model_name"])
+        self.backend = int(param_map["backend"])
+        self.target = int(param_map["target"])
+        self.method = str(param_map["method"])
+        self.model_name = str(param_map["model_name"])
         self.update = True
 
     def get_values(self):
         # Send parameters values to Ikomia application
         # Create the specific dict structure (string container)
-        paramMap = {}
-        paramMap["method"] = str(self.method)
-        paramMap["model_name"] = str(self.model_name)
-        paramMap["backend"] = str(self.backend)
-        paramMap["target"] = str(self.target)
-        return paramMap
+        param_map = {
+            "method": self.method,
+            "model_name": self.model_name,
+            "backend": str(self.backend),
+            "target": str(self.target),
+        }
+        return param_map
 
 
 # --------------------
@@ -65,6 +66,27 @@ class NeuralStyleTransfer(dataprocess.C2dImageTask):
         # This is handled by the main progress bar of Ikomia application
         return 1
 
+    def _load_model(self):
+        param = self.get_param_object()
+        # Get plugin folder
+        plugin_folder = os.path.dirname(os.path.abspath(__file__))
+        model_path = os.path.join(plugin_folder, "models", param.method, param.model_name + ".t7")
+
+        if not os.path.isfile(model_path):
+            print("Downloading model...")
+            download_model(param.method, param.model_name, os.path.join(plugin_folder, "models"))
+
+        # Load the neural style transfer model from disk
+        self.net = cv2.dnn.readNetFromTorch(model_path)
+        self.net.setPreferableBackend(param.backend)
+        self.net.setPreferableTarget(param.target)
+
+    def init_long_process(self):
+        self._load_model()
+        param = self.get_param_object()
+        param.update = False
+        super().init_long_process()
+
     def run(self):
         # Core function of your process
         # Call begin_task_run for initialization
@@ -79,19 +101,11 @@ class NeuralStyleTransfer(dataprocess.C2dImageTask):
 
         # Get parameters
         param = self.get_param_object()
-
-        # Get plugin folder
         plugin_folder = os.path.dirname(os.path.abspath(__file__))
 
         # Load the neural style transfer model from disk
-        if self.net is None or param.update:
-            model_path = os.path.join(plugin_folder, "models", param.method, param.model_name + ".t7")
-            if not os.path.isfile(model_path):
-                print("Downloading model...")
-                download_model(param.method, param.model_name, os.path.join(plugin_folder, "models"))
-            self.net = cv2.dnn.readNetFromTorch(model_path)
-            self.net.setPreferableBackend(param.backend)
-            self.net.setPreferableTarget(param.target)
+        if param.update:
+            self._load_model()
             # temporary fix for a bug in net.forward when model is not reloaded
             #param.update = False
 
@@ -158,7 +172,7 @@ class NeuralStyleTransferFactory(dataprocess.CTaskFactory):
         self.info.short_description = "Neural network method to paint given image in the style of the reference image."
         # relative path -> as displayed in Ikomia application process tree
         self.info.path = "Plugins/Python/Art"
-        self.info.version = "1.1.3"
+        self.info.version = "1.2.0"
         self.info.icon_path = "icon/icon.png"
         self.info.authors = "Justin Johnson, Alexandre Alahi, Li Fei-Fei"
         self.info.article = "Perceptual Losses for Real-Time Style Transfer and Super-Resolution."
@@ -171,6 +185,10 @@ class NeuralStyleTransferFactory(dataprocess.CTaskFactory):
         self.info.keywords = "art,painting,deep learning"
         self.info.algo_type = core.AlgoType.INFER
         self.info.algo_tasks = "IMAGE_GENERATION"
+        self.info.hardware_config.min_cpu = 4
+        self.info.hardware_config.min_ram = 8
+        self.info.hardware_config.gpu_required = False
+        self.info.hardware_config.min_vram = 4
 
     def create(self, param=None):
         # Create process object
