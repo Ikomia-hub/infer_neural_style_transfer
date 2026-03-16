@@ -173,6 +173,10 @@ class NeuralStyleTransferFactory(dataprocess.CTaskFactory):
         # relative path -> as displayed in Ikomia application process tree
         self.info.path = "Plugins/Python/Art"
         self.info.version = "1.3.0"
+        # Ikomia API compatibility (Qt6)
+        self.info.min_ikomia_version = "0.16.0"
+        # Python compatibility
+        self.info.min_python_version = "3.10.0"
         self.info.icon_path = "icon/icon.png"
         self.info.authors = "Justin Johnson, Alexandre Alahi, Li Fei-Fei"
         self.info.article = "Perceptual Losses for Real-Time Style Transfer and Super-Resolution."
