@@ -1,11 +1,11 @@
+# PyQt GUI framework
+from PyQt6.QtWidgets import *
+
 from ikomia import utils, core, dataprocess
 from ikomia.utils import qtconversion
-from infer_neural_style_transfer.infer_neural_style_transfer_process import NeuralStyleTransferParam
-import os
 import cv2
-from imutils import paths
-# PyQt GUI framework
-from PyQt5.QtWidgets import *
+
+from infer_neural_style_transfer.infer_neural_style_transfer_process import NeuralStyleTransferParam
 from infer_neural_style_transfer.utils import model_zoo
 
 backend_names = {
@@ -40,7 +40,7 @@ backend_targets = {
 
 # --------------------
 # - Class which implements widget associated with the process
-# - Inherits core.CProtocolTaskWidget from Imageez API
+# - Inherits core.CProtocolTaskWidget from Ikomia API
 # --------------------
 class NeuralStyleTransferWidget(core.CWorkflowTaskWidget):
 
@@ -146,7 +146,7 @@ class NeuralStyleTransferWidget(core.CWorkflowTaskWidget):
 
 # --------------------
 # - Factory class to build process widget object
-# - Inherits dataprocess.CWidgetFactory from Imageez API
+# - Inherits dataprocess.CWidgetFactory from Ikomia API
 # --------------------
 class NeuralStyleTransferWidgetFactory(dataprocess.CWidgetFactory):
 
